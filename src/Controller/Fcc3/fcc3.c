@@ -12,10 +12,17 @@ uint8_t gOptions;
 int16_t gUserDefinedForce;
 int16_t gUserDefinedRotation[2];
 
+// Millis seconds
+long milliseconds_since;
+
 // Global vars for Config modes
 bool gIsConfig = false;
-uint8_t gPowerLed = 255;
 uint32_t gConfigTimer = 0;
+
+// Buzzer variables
+bool buzzer_stopped = true;
+long milliseconds_since_buzzer;
+long milliseconds_since_buzzer_config;
 
 /////////// Init/Setup Functions ////////////////
 void InitFCC(void)
@@ -23,7 +30,11 @@ void InitFCC(void)
 	SetupSPI();
 
 	TimerInit();
+	Timer0Init();
 	SetupLeds();
+	SetupBuzzer();
+	silenceBuzzer();
+
 	// Now enable global interrupts
 	sei();
 
@@ -52,37 +63,82 @@ void SetupSPI(void)
 
 void SetupLeds(void)
 {
-	// Set PC7 (Arduino Pin 13) For PWM
-	// Set pin to output
-	DDRC |= (1 << DDC7);
-
-	// initiallize PWM4A
-	// TCCR4A |= (1 << PWM4A)
-	cbi(TCCR4A, COM4A0);
-
-	// Now turn LED on for full cycle
-	setStatusLed(gPowerLed);
+	setSetupLed(0);
+	setInternalLeds(0);
 }
 
-void setStatusLed(uint8_t power)
+void setSetupLed(uint8_t ledstatus)
 {
-	if (power == 0)
+	DDRB |= (1 << DDB6);
+	if (ledstatus == 0)
 	{
-		cbi(TCCR4A, COM4A1);
-		PORTC &= ~(1 << PORTC7);
+		PORTB &= ~(1 << PORTB6);
 	}
-	else if (power == 255)
+	else if (ledstatus == 255)
 	{
-		cbi(TCCR4A, COM4A1);
-		PORTC |= (1 << PORTC7);
+		PORTB |= (1 << PORTB6);
 	}
-	else
+}
+
+void setInternalLeds(uint8_t ledstatus)
+{
+	DDRB |= (1 << DDB0);
+	DDRD |= (1 << DDD5);
+	if (ledstatus == 0)
 	{
-		// set timers. pin is OC4A in PMW
-		//		TCCR4A |= (1 << PWM4A) |(1 << COM4A1);
-		//		TCCR4A &= ~(1 << COM4A0);
-		sbi(TCCR4A, COM4A1);
-		OCR4A = power;
+		PORTB |= (1 << PORTB0);
+		PORTD |= (1 << PORTD5);
+	}
+	else if (ledstatus == 255)
+	{
+		PORTB &= ~(1 << PORTB0);
+		PORTD &= ~(1 << PORTD5);
+	}
+}
+
+void SetupBuzzer(void)
+{
+	// Set buzzer to output compare pin (Pin 3 on Pro Micro)
+	DDRD |= (1 << PD0);
+}
+
+void flashInternalLeds()
+{
+	unsigned long milliseconds_current = millis();
+	    if (milliseconds_current - milliseconds_since > 100) {
+		    PORTB ^= (1 << PORTB0);
+		    PORTD ^= (1 << PORTD5);
+		    milliseconds_since = milliseconds_current;
+	    }
+}
+
+void beepBuzzer(uint16_t interval) {
+	unsigned long milliseconds_current_buzzer = millis();
+	if (milliseconds_current_buzzer - milliseconds_since_buzzer > interval) {
+		if (buzzer_stopped) {
+			TCCR0B |= (0 << CS02) | (1 << CS01) | (1 << CS00);
+			buzzer_stopped = false;
+			milliseconds_since_buzzer = milliseconds_current_buzzer;
+		}
+		else {
+			TCCR0B = 0x00;
+			buzzer_stopped = true;
+			milliseconds_since_buzzer = milliseconds_current_buzzer;
+		}
+	}
+}
+
+void beepBuzzer_config(uint16_t interval) {
+	unsigned long milliseconds_current_buzzer_config = millis();
+	if (milliseconds_current_buzzer_config - milliseconds_since_buzzer_config > interval) {
+			TCCR0B |= (0 << CS02) | (1 << CS01) | (1 << CS00);
+			milliseconds_since_buzzer_config = milliseconds_current_buzzer_config;
+	}
+}
+
+void silenceBuzzer() {
+	if (buzzer_stopped && !gIsConfig) {
+		TCCR0B = 0x00;
 	}
 }
 
@@ -290,6 +346,18 @@ void ReadStick(AxisStore *AxisData)
 
 	StickHistory.Y = AxisData->Y;
 	StickHistory.X = AxisData->X;
+	
+	// Beep on axis saturation
+	if (AxisData->X > 1020 || AxisData->X < -1020 || AxisData->Y > 1020 || AxisData->Y < -1020) {
+		beepBuzzer(50);
+	}
+	else if (AxisData->X > 800 || AxisData->X < -800 || AxisData->Y > 800 || AxisData->Y < -800) {
+		beepBuzzer(100);
+	}
+	else {
+		buzzer_stopped = true;
+		silenceBuzzer();
+	}
 }
 
 void RotateFlcs(AxisStore *AxisData)
@@ -491,10 +559,11 @@ void FccSettings(uint32_t Buttons)
 	// COnfig Options for the stick
 	//Check if we need to go into config
 	if (gIsConfig)
-	{					// if we are in config mode
-		gPowerLed -= 2; // will dim PC7 every round, to have a pulsing light to indicate config mode
-		setStatusLed(gPowerLed);
-
+	{							// if we are in config mode
+		//setSetupLed(255);		// Turn on setup LED
+		//setInternalLeds(255);	// Turn off internal LEDs
+		flashInternalLeds();	// Flash internal LEDs
+		beepBuzzer_config(50);	// Beep the buzzer
 		//reset to defaults
 		if (Buttons & GripTriggerSecondDetent)
 		{
@@ -512,6 +581,14 @@ void FccSettings(uint32_t Buttons)
 		}
 
 		if (Buttons & GripDmsFwd)
+		{
+			//reset center
+			ReadStickZero();
+			exitConfig();
+		}
+		
+			//reset center alternative
+		if (Buttons & GripTriggerFirstDetent)
 		{
 			//reset center
 			ReadStickZero();
@@ -563,18 +640,6 @@ void FccSettings(uint32_t Buttons)
 			exitConfig();
 		}
 
-		//if (Buttons & GripDmsRight) {
-		//gUserDefinedForce |= (0x8000);
-		//ChangeSensitivity(gOptions);
-		//exitConfig();
-		//}
-		//
-		//if (Buttons & GripDmsLeft) {
-		//gUserDefinedForce &= ~(0x8000);
-		//ChangeSensitivity(gOptions);
-		//exitConfig();
-		//}
-
 		if (Buttons & GripCmsAft)
 		{
 			// Set user sensitivity
@@ -617,7 +682,8 @@ void FccSettings(uint32_t Buttons)
 				gConfigTimer = millis();
 			}
 		}
-		else if (millis() - gConfigTimer >= 1500)
+		// Enter config mode if buttons held for more than 1.3 seconds
+		else if (millis() - gConfigTimer >= 1300)
 		{
 			gIsConfig = true;
 			gConfigTimer = millis();
@@ -634,11 +700,12 @@ void FccSettings(uint32_t Buttons)
 
 void exitConfig(void)
 {
-	WriteMem(); // Save all the changes to EEPROM
+	WriteMem();				// Save all the changes to EEPROM
 	gIsConfig = false;
 	gConfigTimer = 0;
-	gPowerLed = 255;
-	setStatusLed(gPowerLed);
+	setSetupLed(0);			// Turn off Setup LED
+	setInternalLeds(0);		// Turn off internal LEDs
+	silenceBuzzer();		// Silence buzzer
 }
 
 void processStickOut(uint8_t inOptions, int16_t inUserForce)

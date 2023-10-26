@@ -49,6 +49,18 @@ void TimerInit(void)
 	TIMSK1 |= (1 << OCIE1A);
 }
 
+void Timer0Init(void)
+{
+	TCCR0A |= (0 << WGM02) | (1 << WGM01) | ( 1 << WGM00);
+	// Set the Timer0 prescaler to /64 (gives ~976Hz frequency on /64)
+	TCCR0B |= (0 << CS02) | (1 << CS01) | (1 << CS00);
+
+	// Non-inverting
+	TCCR0A |= (1 << COM0B1) | (0 << COM0B0);
+	
+	// Set output compare register (64 for 25% duty cycle, 128 for 50% on a 8-bit timer)
+	OCR0B = 128;
+}
 
 int32_t map(int32_t InVal, int32_t in_min, int32_t in_max, int32_t out_min, int32_t out_max)
 {

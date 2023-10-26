@@ -21,7 +21,7 @@
 #define StickAllowedMax 1023
 #define StickAllowedMin -1024
 
-#define STICK_DEADZONE 30
+#define STICK_DEADZONE 20
 
 // 9Kg/f
 #define FORCE_9KGF 1638
@@ -41,7 +41,6 @@
 
 #define EEPROM_EMPTY_BYTE(b) ((b) == 0 ? 1 : (b) == 0xFF ? 1 : 0)
 #define EEPROM_EMPTY_WORD(w) ((w) == 0 ? 1 : (w) == 0xFFFF ? 1 : 0)
-
 
 // Structs
 typedef struct  {
@@ -81,7 +80,6 @@ enum CommandOptions {
 	CenterDevice = 0x4000,
 	RebootDevice = 0x8000,
 };
-
 
   #define GripTriggerFirstDetent 0x01
   #define GripPickle 0x02
