@@ -3,12 +3,14 @@
 // configure Global EEPROM pointers
 uint16_t EEMEM NonVolatileUserForce = FORCE_3KGF;
 uint8_t EEMEM NonVolatileOptions = Force4Kg;
+uint8_t EEMEM NonVolatileExtOptions = WarningSound;
 uint16_t EEMEM NonVolitileRotationCos = 978;
 uint16_t EEMEM NonVolitileRotationSin = -207;
 
 // Global vars to store EEPROM values for runtime
 StickLimit gStickLimits;
 uint8_t gOptions;
+uint8_t eOptions;
 int16_t gUserDefinedForce;
 int16_t gUserDefinedRotation[2];
 
@@ -102,10 +104,10 @@ void SetupBuzzer(void)
 	DDRD |= (1 << PD0);
 }
 
-void flashInternalLeds()
+void flashInternalLeds(uint16_t interval)
 {
 	unsigned long milliseconds_current = millis();
-	    if (milliseconds_current - milliseconds_since > 100) {
+	    if (milliseconds_current - milliseconds_since > interval) {
 		    PORTB ^= (1 << PORTB0);
 		    PORTD ^= (1 << PORTD5);
 		    milliseconds_since = milliseconds_current;
@@ -128,14 +130,6 @@ void beepBuzzer(uint16_t interval) {
 	}
 }
 
-void beepBuzzer_config(uint16_t interval) {
-	unsigned long milliseconds_current_buzzer_config = millis();
-	if (milliseconds_current_buzzer_config - milliseconds_since_buzzer_config > interval) {
-			TCCR0B |= (0 << CS02) | (1 << CS01) | (1 << CS00);
-			milliseconds_since_buzzer_config = milliseconds_current_buzzer_config;
-	}
-}
-
 void silenceBuzzer() {
 	if (buzzer_stopped && !gIsConfig) {
 		TCCR0B = 0x00;
@@ -147,6 +141,7 @@ void WriteMem(void)
 {
 	// This function will write to EEPROM any values that had been changed in runtime (to save EEPROM lifetime)
 	uint8_t volatile VolatileOptions;
+	uint8_t volatile VolatileExtOptions;
 
 	int16_t volatile VolatileUserForce;
 
@@ -155,6 +150,7 @@ void WriteMem(void)
 
 	// Read EEPROM
 	VolatileOptions = eeprom_read_byte(&NonVolatileOptions);
+	VolatileExtOptions = eeprom_read_byte(&NonVolatileExtOptions);
 	VolatileUserForce = eeprom_read_word(&NonVolatileUserForce);
 
 	VolitileRotationCos = eeprom_read_word(&NonVolitileRotationCos);
@@ -170,6 +166,11 @@ void WriteMem(void)
 		eeprom_update_byte(&NonVolatileOptions, gOptions);
 	}
 
+	if (VolatileExtOptions != eOptions)
+	{
+		eeprom_update_byte(&NonVolatileExtOptions, eOptions);
+	}
+
 	if (gUserDefinedForce != VolatileUserForce)
 	{
 		eeprom_update_word(&NonVolatileUserForce, gUserDefinedForce);
@@ -182,6 +183,7 @@ void WriteMem(void)
 void ReadMem(void)
 {
 	uint8_t volatile VolatileOptions;
+	uint8_t volatile VolatileExtOptions;
 	int16_t volatile VolatileUserForce;
 
 	int16_t volatile VolitileRotationCos;
@@ -189,6 +191,7 @@ void ReadMem(void)
 
 	// Read EEPROM
 	VolatileOptions = eeprom_read_byte(&NonVolatileOptions);
+	VolatileExtOptions = eeprom_read_byte(&NonVolatileExtOptions);
 	//VolatileOptions &= ~(RebootDevice); //make sure RebootFlag doesn't carry over
 	VolatileUserForce = eeprom_read_word(&NonVolatileUserForce);
 	VolatileUserForce &= ~(0xF000); //Really make sure reboot and center flags don't carry over
@@ -200,6 +203,7 @@ void ReadMem(void)
 	// result = a > b ? x : y;
 
 	gOptions = EEPROM_EMPTY_BYTE(VolatileOptions) ? Force4Kg : VolatileOptions;
+	eOptions = EEPROM_EMPTY_BYTE(VolatileExtOptions) ? WarningSound : VolatileExtOptions;
 	gUserDefinedForce = EEPROM_EMPTY_WORD(VolatileUserForce) ? FORCE_3KGF : VolatileUserForce;
 
 	gUserDefinedRotation[0] = EEPROM_EMPTY_WORD(VolitileRotationCos) ? ROT_COS : VolitileRotationCos;
@@ -346,6 +350,7 @@ void ReadStick(AxisStore *AxisData)
 
 	StickHistory.Y = AxisData->Y;
 	StickHistory.X = AxisData->X;
+
 	
 	// Beep on axis saturation
 	if (AxisData->X > 1020 || AxisData->X < -1020 || AxisData->Y > 1020 || AxisData->Y < -1020) {
@@ -355,8 +360,11 @@ void ReadStick(AxisStore *AxisData)
 		beepBuzzer(100);
 	}
 	else {
-		buzzer_stopped = true;
-		silenceBuzzer();
+		{
+			if (!gIsConfig)
+				buzzer_stopped = true;
+				silenceBuzzer();
+		}
 	}
 }
 
@@ -556,14 +564,12 @@ uint8_t MapHat(uint8_t HatSwitch)
 
 void FccSettings(uint32_t Buttons)
 {
-	// COnfig Options for the stick
-	//Check if we need to go into config
+	// Config Options for the stick
+	// Check if we need to go into config
 	if (gIsConfig)
 	{							// if we are in config mode
-		//setSetupLed(255);		// Turn on setup LED
-		//setInternalLeds(255);	// Turn off internal LEDs
-		flashInternalLeds();	// Flash internal LEDs
-		beepBuzzer_config(50);	// Beep the buzzer
+		flashInternalLeds(180);	// Flash internal LEDs
+		beepBuzzer(180);		// Beep the buzzer
 		//reset to defaults
 		if (Buttons & GripTriggerSecondDetent)
 		{
@@ -581,14 +587,6 @@ void FccSettings(uint32_t Buttons)
 		}
 
 		if (Buttons & GripDmsFwd)
-		{
-			//reset center
-			ReadStickZero();
-			exitConfig();
-		}
-		
-			//reset center alternative
-		if (Buttons & GripTriggerFirstDetent)
 		{
 			//reset center
 			ReadStickZero();

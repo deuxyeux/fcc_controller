@@ -21,7 +21,7 @@ namespace Fcc3_configurator
             if (mutex.WaitOne(TimeSpan.Zero, true))
             {
 
-                Application.EnableVisualStyles();
+            Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainForm());
                 mutex.ReleaseMutex();

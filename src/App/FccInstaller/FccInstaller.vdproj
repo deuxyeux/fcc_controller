@@ -15,6 +15,18 @@
     {
         "Entry"
         {
+        "MsmKey" = "8:_160448ED4ECEAAD4FFDDBA2E2EF65B20"
+        "OwnerKey" = "8:_71BE918340FC499049090F36BD4B55AA"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_16D8C07058045A84F931A9B1D1681958"
+        "OwnerKey" = "8:_BAC0E14BFF4249AC9617D1720247C6CD"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_26DF4251D3974B3599148DC74E77F967"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -27,19 +39,19 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_4781B42B71265035D90758A0EC2952EE"
-        "OwnerKey" = "8:_BAC0E14BFF4249AC9617D1720247C6CD"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_523370486F2A4FCE89F25E71153D9A3E"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_66FCF637F9C5B50EDC53C5AED1EF920B"
+        "MsmKey" = "8:_71BE918340FC499049090F36BD4B55AA"
+        "OwnerKey" = "8:_BAC0E14BFF4249AC9617D1720247C6CD"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_889BD8492A2B64982159FE9F498EE352"
         "OwnerKey" = "8:_BAC0E14BFF4249AC9617D1720247C6CD"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -57,44 +69,32 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_DD11FB0C5BF16D105DC19CF4E9C0812C"
-        "OwnerKey" = "8:_E03EC169B99AB8A461AC56E2CA62DCCC"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_E03EC169B99AB8A461AC56E2CA62DCCC"
+        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_BAC0E14BFF4249AC9617D1720247C6CD"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_BAC0E14BFF4249AC9617D1720247C6CD"
+        "OwnerKey" = "8:_71BE918340FC499049090F36BD4B55AA"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_16D8C07058045A84F931A9B1D1681958"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_889BD8492A2B64982159FE9F498EE352"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_4002CBEE0293F237CE1406EC059FFDA1"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_66FCF637F9C5B50EDC53C5AED1EF920B"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_4781B42B71265035D90758A0EC2952EE"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_E03EC169B99AB8A461AC56E2CA62DCCC"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -105,7 +105,7 @@
         "DisplayName" = "8:Debug"
         "IsDebugOnly" = "11:TRUE"
         "IsReleaseOnly" = "11:FALSE"
-        "OutputFilename" = "8:Debug\\FccInstaller.msi"
+        "OutputFilename" = "8:fcc3_configurator.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -137,7 +137,7 @@
         "DisplayName" = "8:Publish"
         "IsDebugOnly" = "11:FALSE"
         "IsReleaseOnly" = "11:FALSE"
-        "OutputFilename" = "8:Publish\\FccInstaller.msi"
+        "OutputFilename" = "8:fcc3_configurator.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -169,7 +169,7 @@
         "DisplayName" = "8:Release"
         "IsDebugOnly" = "11:FALSE"
         "IsReleaseOnly" = "11:TRUE"
-        "OutputFilename" = "8:Release\\FccInstaller.msi"
+        "OutputFilename" = "8:fcc3_configurator.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -224,6 +224,57 @@
         }
         "File"
         {
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_160448ED4ECEAAD4FFDDBA2E2EF65B20"
+            {
+            "SourcePath" = "8:HidSharp.tlb"
+            "TargetName" = "8:HidSharp.tlb"
+            "Tag" = "8:"
+            "Folder" = "8:_FFCAECA7CF0240AEAB6EEEAB2C262090"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:2"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_16D8C07058045A84F931A9B1D1681958"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:HexUploader, Version=0.1.8.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_16D8C07058045A84F931A9B1D1681958"
+                    {
+                    "Name" = "8:HexUploader.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:HexUploader.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_FFCAECA7CF0240AEAB6EEEAB2C262090"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_26DF4251D3974B3599148DC74E77F967"
             {
             "SourcePath" = "8:..\\HexUploader\\Avrdude\\avrdude.exe"
@@ -251,34 +302,13 @@
             "AssemblyAsmDisplayName" = "8:System.Net.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
                 "ScatterAssemblies"
                 {
+                    "_4002CBEE0293F237CE1406EC059FFDA1"
+                    {
+                    "Name" = "8:System.Net.Http.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:System.Net.Http.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_FFCAECA7CF0240AEAB6EEEAB2C262090"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_4781B42B71265035D90758A0EC2952EE"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:HexUploader, Version=0.1.8.0, Culture=neutral, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                }
-            "SourcePath" = "8:HexUploader.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_FFCAECA7CF0240AEAB6EEEAB2C262090"
@@ -316,13 +346,49 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_66FCF637F9C5B50EDC53C5AED1EF920B"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_71BE918340FC499049090F36BD4B55AA"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:HidSharp, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_71BE918340FC499049090F36BD4B55AA"
+                    {
+                    "Name" = "8:HidSharp.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:HidSharp.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_FFCAECA7CF0240AEAB6EEEAB2C262090"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_889BD8492A2B64982159FE9F498EE352"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:GithubUpdater, Version=0.1.9.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_889BD8492A2B64982159FE9F498EE352"
+                    {
+                    "Name" = "8:GithubUpdater.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:GithubUpdater.dll"
             "TargetName" = "8:"
@@ -360,52 +426,6 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_DD11FB0C5BF16D105DC19CF4E9C0812C"
-            {
-            "SourcePath" = "8:HidSharp.tlb"
-            "TargetName" = "8:HidSharp.tlb"
-            "Tag" = "8:"
-            "Folder" = "8:_FFCAECA7CF0240AEAB6EEEAB2C262090"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:2"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_E03EC169B99AB8A461AC56E2CA62DCCC"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:HidSharp, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                }
-            "SourcePath" = "8:HidSharp.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_FFCAECA7CF0240AEAB6EEEAB2C262090"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
         }
@@ -476,7 +496,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:FCC Controller"
         "ProductCode" = "8:{FA5354FA-F781-4FD7-8F9A-F4EF25383B5B}"
-        "PackageCode" = "8:{6F35F5E6-0DB1-4108-AD50-4E5FF3C80FBB}"
+        "PackageCode" = "8:{8C3A2096-74E3-4481-B241-30D644479E31}"
         "UpgradeCode" = "8:{2B1592A2-23E4-493D-90C2-1B6DDADCB221}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"

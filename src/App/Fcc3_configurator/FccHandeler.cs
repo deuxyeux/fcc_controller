@@ -26,6 +26,9 @@ namespace Fcc3_configurator
         private ConfigOptions RunTimeOptions;
         private ConfigOptions RequestedOptions;
 
+        private ExtConfigOptions ExtRunTimeOptions;
+        private ExtConfigOptions ExtRequestedOptions;
+
         #region properties
         public bool isConnected
         {
@@ -142,6 +145,32 @@ namespace Fcc3_configurator
                 }
             }
         }
+        public bool WarningSound
+        {
+            get
+            {
+                if ((ExtRunTimeOptions & ExtConfigOptions.WarningSound) != 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                };
+            }
+            set
+            {
+                if (value)
+                {
+                    ExtRequestedOptions |= ExtConfigOptions.WarningSound;
+                }
+                else
+                {
+                    ExtRequestedOptions &= ~(ExtConfigOptions.WarningSound);
+                }
+            }
+        }
+
         public bool Use4KgForce
         {
             get
@@ -305,6 +334,11 @@ namespace Fcc3_configurator
             ForceUserDefined = 0x80,
             ForceAll = 0xF0,
         };
+        [Flags]
+        public enum ExtConfigOptions
+        {
+            WarningSound = 0x01,
+        };
 
         [Flags]
         public enum CommandOptions
@@ -318,9 +352,6 @@ namespace Fcc3_configurator
             VID = _VID;
             PID = _PID;
         }
-
-
-
         public bool Connect()
         {
             var loader = new HidDeviceLoader();
@@ -358,6 +389,7 @@ namespace Fcc3_configurator
                 {
                     stream.Read(buff);
                     RunTimeOptions = (ConfigOptions)buff[7];
+                    ExtRunTimeOptions = (ExtConfigOptions)buff[7];
                     CurrentCustomForce = (Int16)((buff[9] << 8) | buff[8]);
                     Ypos = (Int16)(((((Int16)(buff[3] & 0x3F) << 10)) | ((Int16)(buff[2] >> 3) << 5)));
                     Xpos = (Int16)(((Int16)(buff[2] & 0x07) << 13) | (((Int16)buff[1]) << 5));

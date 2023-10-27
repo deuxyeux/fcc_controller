@@ -7,9 +7,6 @@ using System.IO.Ports;
 using HidSharp;
 //using System.IO.Compression;
 
-
-
-
 namespace Fcc3_configurator
 {
     public partial class MainForm : Form
@@ -65,12 +62,13 @@ namespace Fcc3_configurator
           Properties.Settings.Default.UseNewFccGain = Stick.isFccWhGains;
           Properties.Settings.Default.Save();
 
-            checkBoxRotate.Checked = Stick.isSensorRotated;
+          checkBoxRotate.Checked = Stick.isSensorRotated;
           bool DigitalFlcs = Stick.isDigitalFlcs;
           bool AnalogFlcs = Stick.isAnalogFlcs;
           checkBoxForceMapping.Checked = (AnalogFlcs || DigitalFlcs);
           radioButtonAnalogFlcs.Checked = AnalogFlcs;
           radioButtonDigitalFlcs.Checked = DigitalFlcs;
+          checkBoxWarningSound.Checked = Stick.WarningSound;
 
           radioButton4Kg.Checked = Stick.Use4KgForce;
           radioButton6Kg.Checked = Stick.Use6KgForce;
@@ -124,6 +122,7 @@ namespace Fcc3_configurator
                 Stick.isDigitalFlcs = false;
             }
             Stick.isSensorRotated = checkBoxRotate.Checked;
+            Stick.WarningSound = checkBoxWarningSound.Checked;
             Stick.isFccWhGains = Properties.Settings.Default.UseNewFccGain;
 
             Stick.SetCustomForce(numericUserDefined.Value, isKgSelected);
@@ -154,6 +153,7 @@ namespace Fcc3_configurator
             radioButton6Kg.Checked = ((SavedOptions & (byte)FccHandeler.ConfigOptions.Force6Kg) != 0) ? true : false;
             radioButton9Kg.Checked = ((SavedOptions & (byte)FccHandeler.ConfigOptions.Force9Kg) != 0) ? true : false;
             radioButtonUser.Checked = ((SavedOptions & (byte)FccHandeler.ConfigOptions.ForceUserDefined) != 0) ? true : false;
+            checkBoxWarningSound.Checked = ((SavedOptions & (byte)FccHandeler.ExtConfigOptions.WarningSound) != 0) ? true : false;
             checkBoxNotifyApp.Checked = Properties.Settings.Default.notifyApp;
             checkBoxNotifyFirmware.Checked = Properties.Settings.Default.notifyFirmware;
         }
@@ -202,6 +202,16 @@ namespace Fcc3_configurator
                 labelSensorRotation.ForeColor = Color.Red;
             }
 
+            if (Stick.WarningSound)
+            {
+                labelWarningSound.Text = "ON";
+                labelWarningSound.ForeColor = Color.Green;
+            }
+            else
+            {
+                labelWarningSound.Text = "OFF";
+                labelWarningSound.ForeColor = Color.Red;
+            }
 
             labelForce4Kg.Visible = Stick.Use4KgForce;
             labelForce6kg.Visible = Stick.Use6KgForce;
@@ -509,6 +519,5 @@ namespace Fcc3_configurator
         {
             this.Show();
         }
-
     }
 }

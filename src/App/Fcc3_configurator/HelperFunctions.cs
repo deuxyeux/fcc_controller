@@ -116,8 +116,17 @@ namespace Fcc3_configurator
             RetVal = (byte)options;
             return RetVal;
         }
-
-
+        private Byte MakeExtOptions()
+        {
+            Byte RetVal = 0;
+            FccHandeler.ExtConfigOptions options = 0;
+            if (checkBoxWarningSound.Checked)
+            {
+                options |= FccHandeler.ExtConfigOptions.WarningSound;
+            }
+            RetVal = (byte)options;
+            return RetVal;
+        }
         private bool UpgradeFirmware(string HexPath)
         {
             bool isSuccess = false;

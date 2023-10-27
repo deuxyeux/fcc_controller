@@ -76,6 +76,10 @@ enum ConfigOptions {
     ForceAll = 0xF0,
 };
 
+enum ExtConfigOptions {
+	WarningSound = 0x01,
+};
+
 enum CommandOptions {
 	CenterDevice = 0x4000,
 	RebootDevice = 0x8000,
