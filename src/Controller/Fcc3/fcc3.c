@@ -33,9 +33,9 @@ void InitFCC(void)
 
 	TimerInit();
 	Timer0Init();
-	SetupLeds();
-	SetupBuzzer();
-	silenceBuzzer();
+	setSetupLed(0);
+	setInternalLeds(0);
+	setBuzzer();
 
 	// Now enable global interrupts
 	sei();
@@ -46,27 +46,16 @@ void InitFCC(void)
 
 void SetupSPI(void)
 {
-	// Set Grip CS (PE6 - Arduino Pin7)
+	// Set Grip CS (PE6 - Arduino Pin 7)
 	// CS should rest high
 	DDRE |= (1 << DDE6);	// set to output
 	PORTE |= (1 << PORTE6); // pull high
 
-	// ADC CS (PC6 - Arduino Pin5)
+	// ADC CS (PC6 - Arduino Pin 5)
 	DDRC |= (1 << DDC6);
 	PORTC |= (1 << PORTC6);
 
 	SPI_Init(SPI_SPEED_FCPU_DIV_4 | SPI_MODE_MASTER);
-
-	// Set PF0 and PF1 to output for Axis Zero Led
-	// Done Here because ADC is check is driving those pins..
-	// Also set PF4&5 for pro-micro
-	DDRF |= (1 << PORTF0) | (1 << PORTF1) | (1 << PORTF4) | (1 << PORTF5);
-}
-
-void SetupLeds(void)
-{
-	setSetupLed(0);
-	setInternalLeds(0);
 }
 
 void setSetupLed(uint8_t ledstatus)
@@ -84,6 +73,7 @@ void setSetupLed(uint8_t ledstatus)
 
 void setInternalLeds(uint8_t ledstatus)
 {
+	// Set direction registers for Pro Micro pins RXLED (PB0) and TXLED (PD5)
 	DDRB |= (1 << DDB0);
 	DDRD |= (1 << DDD5);
 	if (ledstatus == 0)
@@ -98,7 +88,7 @@ void setInternalLeds(uint8_t ledstatus)
 	}
 }
 
-void SetupBuzzer(void)
+void setBuzzer(void)
 {
 	// Set buzzer to output compare pin (Pin 3 on Pro Micro)
 	DDRD |= (1 << PD0);
@@ -309,16 +299,19 @@ int16_t readSPIADC(uint8_t adcChannel)
 	PORTC |= (1 << PINC6); // Pull Shift register CS high
 
 	// Add a very not streamlined thing here (might be better to move to a different place later).
-	// If output is exactly 0 (i.e entered voltage, light up the correct LED on PORTF - PF0 for pitch, PF1 for roll)
-	if (abs(result) - STICK_DEADZONE <= 0)
-	{
-		PORTF |= (1 << adcChannel);		  // pull high (led on)
-		PORTF |= (1 << (adcChannel + 4)); // pull high (led on)
-	}
-	else
-	{
-		PORTF &= ~(1 << adcChannel);	   // pull low (led off)
-		PORTF &= ~(1 << (adcChannel + 4)); // pull low (led off)
+	// If output is exactly 0 (i.e entered voltage, light up the correct LED on PORTF - PB0 for pitch, PD5 for roll)
+
+	if (!gIsConfig) {
+		if (abs(result) - STICK_DEADZONE <= 0)
+		{
+			PORTB &= ~(1 << adcChannel);	   // pull low (led on)
+			PORTD &= ~(1 << (adcChannel + 4)); // pull low (led on)
+		}
+		else
+		{
+			PORTB |= (1 << adcChannel);		  // pull high (led off)
+			PORTD |= (1 << (adcChannel + 4)); // pull high (led off)
+		}
 	}
 	return result;
 }

@@ -163,8 +163,10 @@ extern uint8_t gPowerLed;
 //Function decelerations
 // Hardware
 void SetupSPI(void);
-void SetupLeds(void);
-void setStatusLed(uint8_t power);
+void Timer0Init(void);
+void setSetupLed(uint8_t ledstatus);
+void setInternalLeds(uint8_t ledstatus);
+void setBuzzer(void);
 int16_t readSPIADC(uint8_t adcChannel);
 
 // Generic stuff
